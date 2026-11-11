@@ -1058,22 +1058,24 @@ export default function App() {
           ctx.stroke();
         }
 
+        // X-axis labels: all labels are anchored to y = 0.
         if (px >= 0 && px <= width) {
           const labelY = Math.min(
             height - 14,
-            Math.max(14, py + 16),
+            Math.max(14, centerY + 22),
           );
 
-          ctx.fillStyle = 'rgba(3,7,18,0.82)';
+          ctx.fillStyle = 'rgba(3,7,18,0.88)';
           ctx.fillRect(
-            Math.max(0, px - 22),
-            labelY - 9,
-            44,
-            18,
+            Math.max(0, px - 24),
+            labelY - 10,
+            48,
+            20,
           );
 
           ctx.fillStyle = '#ffffff';
           ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
           ctx.fillText(
             formatCoordinate(value),
             px,
@@ -1081,22 +1083,29 @@ export default function App() {
           );
         }
 
-        if (py >= 0 && py <= height) {
+        // Y-axis labels: all labels are anchored to x = 0.
+        // The origin label is drawn only on the x-axis.
+        if (
+          py >= 0 &&
+          py <= height &&
+          Math.abs(value) > 0.0001
+        ) {
           const labelX = Math.min(
             width - 18,
-            Math.max(18, px - 18),
+            Math.max(18, centerX - 18),
           );
 
-          ctx.fillStyle = 'rgba(3,7,18,0.82)';
+          ctx.fillStyle = 'rgba(3,7,18,0.88)';
           ctx.fillRect(
-            labelX - 22,
-            py - 9,
-            44,
-            18,
+            labelX - 30,
+            py - 10,
+            42,
+            20,
           );
 
           ctx.fillStyle = '#ffffff';
           ctx.textAlign = 'right';
+          ctx.textBaseline = 'middle';
           ctx.fillText(
             formatCoordinate(value),
             labelX,
