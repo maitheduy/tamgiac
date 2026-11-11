@@ -1065,14 +1065,6 @@ export default function App() {
             Math.max(14, centerY + 22),
           );
 
-          ctx.fillStyle = 'rgba(3,7,18,0.88)';
-          ctx.fillRect(
-            Math.max(0, px - 24),
-            labelY - 10,
-            48,
-            20,
-          );
-
           ctx.fillStyle = '#ffffff';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
@@ -1093,14 +1085,6 @@ export default function App() {
           const labelX = Math.min(
             width - 18,
             Math.max(18, centerX - 18),
-          );
-
-          ctx.fillStyle = 'rgba(3,7,18,0.88)';
-          ctx.fillRect(
-            labelX - 30,
-            py - 10,
-            42,
-            20,
           );
 
           ctx.fillStyle = '#ffffff';
