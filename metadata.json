@@ -1,0 +1,6 @@
+{
+  "name": "IFS Attractor Explorer",
+  "description": "Interactive Iterated Function System (IFS) attractor generator with real-time parameter controls for alpha and beta.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
