@@ -996,126 +996,132 @@ export default function App() {
       );
 
       /* -----------------------------
-         GRID
+         COORDINATE GRID + LABELS
       ----------------------------- */
 
       ctx.save();
 
-      const tickStep =
-        scale < 80
-          ? 1
-          : scale < 200
-            ? 0.5
-            : 0.25;
+      const gridValues = [
+        -1,
+        -0.75,
+        -0.5,
+        -0.25,
+        0,
+        0.25,
+        0.5,
+        0.75,
+        1,
+      ];
 
-      for (
-        let v = -10;
-        v <= 10;
-        v += 0.25
-      ) {
-        if (
-          tickStep === 1 &&
-          Math.abs(
-            v % 1,
-          ) > 0.001
-        ) {
-          continue;
-        }
+      const formatCoordinate = (value: number) => {
+        if (Math.abs(value) < 0.0001) return '0';
+        return Number.isInteger(value)
+          ? value.toFixed(0)
+          : value.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+      };
 
-        if (
-          tickStep === 0.5 &&
-          Math.abs(
-            (v * 2) % 1,
-          ) > 0.001
-        ) {
-          continue;
-        }
+      ctx.font =
+        '12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+      ctx.textBaseline = 'middle';
 
+      for (const value of gridValues) {
         const px =
           Math.round(
-            centerX +
-              v * scale,
+            centerX + value * scale,
           );
 
         const py =
           Math.round(
-            centerY -
-              v * scale,
+            centerY - value * scale,
           );
 
-        const isZero =
-          Math.abs(v) <
-          0.0001;
+        const isAxis =
+          Math.abs(value) < 0.0001;
 
-        const isMajor =
-          Math.abs(v % 1) <
-            0.001 ||
-          Math.abs(
-            v % 0.5,
-          ) < 0.001;
+        ctx.strokeStyle = isAxis
+          ? 'rgba(255,255,255,0.92)'
+          : 'rgba(255,255,255,0.24)';
 
-        if (
-          px >= 0 &&
-          px <= width
-        ) {
+        ctx.lineWidth = isAxis ? 2 : 1;
+
+        if (px >= 0 && px <= width) {
           ctx.beginPath();
-
-          ctx.strokeStyle =
-            isZero
-              ? 'rgba(255,255,255,0.35)'
-              : isMajor
-                ? 'rgba(255,255,255,0.08)'
-                : 'rgba(255,255,255,0.03)';
-
-          ctx.lineWidth =
-            isZero
-              ? 1.5
-              : 1;
-
-          ctx.moveTo(
-            px,
-            0,
-          );
-
-          ctx.lineTo(
-            px,
-            height,
-          );
-
+          ctx.moveTo(px, 0);
+          ctx.lineTo(px, height);
           ctx.stroke();
         }
 
-        if (
-          py >= 0 &&
-          py <= height
-        ) {
+        if (py >= 0 && py <= height) {
           ctx.beginPath();
-
-          ctx.strokeStyle =
-            isZero
-              ? 'rgba(255,255,255,0.35)'
-              : isMajor
-                ? 'rgba(255,255,255,0.08)'
-                : 'rgba(255,255,255,0.03)';
-
-          ctx.lineWidth =
-            isZero
-              ? 1.5
-              : 1;
-
-          ctx.moveTo(
-            0,
-            py,
-          );
-
-          ctx.lineTo(
-            width,
-            py,
-          );
-
+          ctx.moveTo(0, py);
+          ctx.lineTo(width, py);
           ctx.stroke();
+        }
+
+        if (px >= 0 && px <= width) {
+          const labelY = Math.min(
+            height - 14,
+            Math.max(14, py + 16),
+          );
+
+          ctx.fillStyle = 'rgba(3,7,18,0.82)';
+          ctx.fillRect(
+            Math.max(0, px - 22),
+            labelY - 9,
+            44,
+            18,
+          );
+
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.fillText(
+            formatCoordinate(value),
+            px,
+            labelY,
+          );
+        }
+
+        if (py >= 0 && py <= height) {
+          const labelX = Math.min(
+            width - 18,
+            Math.max(18, px - 18),
+          );
+
+          ctx.fillStyle = 'rgba(3,7,18,0.82)';
+          ctx.fillRect(
+            labelX - 22,
+            py - 9,
+            44,
+            18,
+          );
+
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'right';
+          ctx.fillText(
+            formatCoordinate(value),
+            labelX,
+            py,
+          );
         }
       }
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font =
+        'bold 13px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+
+      ctx.textAlign = 'right';
+      ctx.fillText(
+        'x',
+        width - 10,
+        Math.min(height - 18, Math.max(18, centerY)),
+      );
+
+      ctx.textAlign = 'left';
+      ctx.fillText(
+        'y',
+        Math.min(width - 18, Math.max(18, centerX + 8)),
+        16,
+      );
 
       ctx.restore();
 
@@ -1290,104 +1296,166 @@ export default function App() {
         });
 
       /* ---------------------------------------------------
-         GRID
+         COORDINATE GRID + LABELS
       --------------------------------------------------- */
 
       ctx.save();
 
-      ctx.strokeStyle =
-        'rgba(255,255,255,0.16)';
+      const gridValues = [
+        -1,
+        -0.75,
+        -0.5,
+        -0.25,
+        0,
+        0.25,
+        0.5,
+        0.75,
+        1,
+      ];
 
-      ctx.lineWidth = 1;
+      const formatCoordinate = (value: number) => {
+        if (Math.abs(value) < 0.0001) return '0';
+        return Number.isInteger(value)
+          ? value.toFixed(0)
+          : value.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+      };
 
-      const gridStep =
-        scale > 150
-          ? 0.5
-          : 1;
+      ctx.font =
+        '12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+      ctx.textBaseline = 'middle';
 
-      const gridMinX =
-        Math.floor(
-          minX - 2,
-        );
+      for (const value of gridValues) {
+        const verticalTop = project({
+          x: value,
+          y: maxY + 2,
+        });
 
-      const gridMaxX =
-        Math.ceil(
-          maxX + 2,
-        );
+        const verticalBottom = project({
+          x: value,
+          y: minY - 2,
+        });
 
-      const gridMinY =
-        Math.floor(
-          minY - 2,
-        );
+        const horizontalLeft = project({
+          x: minX - 2,
+          y: value,
+        });
 
-      const gridMaxY =
-        Math.ceil(
-          maxY + 2,
-        );
+        const horizontalRight = project({
+          x: maxX + 2,
+          y: value,
+        });
 
-      for (
-        let x = gridMinX;
-        x <= gridMaxX;
-        x += gridStep
-      ) {
-        const a =
-          project({
-            x,
-            y: minY - 2,
-          });
+        const isAxis =
+          Math.abs(value) < 0.0001;
 
-        const b =
-          project({
-            x,
-            y: maxY + 2,
-          });
+        ctx.strokeStyle = isAxis
+          ? 'rgba(255,255,255,0.92)'
+          : 'rgba(255,255,255,0.24)';
 
-        ctx.beginPath();
-
-        ctx.moveTo(
-          a.x,
-          a.y,
-        );
-
-        ctx.lineTo(
-          b.x,
-          b.y,
-        );
-
-        ctx.stroke();
-      }
-
-      for (
-        let y = gridMinY;
-        y <= gridMaxY;
-        y += gridStep
-      ) {
-        const a =
-          project({
-            x: minX - 2,
-            y,
-          });
-
-        const b =
-          project({
-            x: maxX + 2,
-            y,
-          });
+        ctx.lineWidth = isAxis ? 2 : 1;
 
         ctx.beginPath();
-
         ctx.moveTo(
-          a.x,
-          a.y,
+          verticalTop.x,
+          verticalTop.y,
         );
-
         ctx.lineTo(
-          b.x,
-          b.y,
+          verticalBottom.x,
+          verticalBottom.y,
         );
-
         ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(
+          horizontalLeft.x,
+          horizontalLeft.y,
+        );
+        ctx.lineTo(
+          horizontalRight.x,
+          horizontalRight.y,
+        );
+        ctx.stroke();
+
+        const xLabelPoint = project({
+          x: value,
+          y: minY - 2,
+        });
+
+        const yLabelPoint = project({
+          x: minX - 2,
+          y: value,
+        });
+
+        if (
+          xLabelPoint.x >= 0 &&
+          xLabelPoint.x <= width
+        ) {
+          const labelY = Math.min(
+            height - 14,
+            Math.max(14, xLabelPoint.y),
+          );
+
+          ctx.fillStyle = 'rgba(3,7,18,0.82)';
+          ctx.fillRect(
+            Math.max(0, xLabelPoint.x - 22),
+            labelY - 9,
+            44,
+            18,
+          );
+
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.fillText(
+            formatCoordinate(value),
+            xLabelPoint.x,
+            labelY,
+          );
+        }
+
+        if (
+          yLabelPoint.y >= 0 &&
+          yLabelPoint.y <= height
+        ) {
+          const labelX = Math.min(
+            width - 18,
+            Math.max(18, yLabelPoint.x),
+          );
+
+          ctx.fillStyle = 'rgba(3,7,18,0.82)';
+          ctx.fillRect(
+            labelX - 22,
+            yLabelPoint.y - 9,
+            44,
+            18,
+          );
+
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'right';
+          ctx.fillText(
+            formatCoordinate(value),
+            labelX,
+            yLabelPoint.y,
+          );
+        }
       }
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font =
+        'bold 13px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+
+      ctx.textAlign = 'right';
+      ctx.fillText(
+        'x',
+        width - 10,
+        Math.min(height - 18, Math.max(18, centerY)),
+      );
+
+      ctx.textAlign = 'left';
+      ctx.fillText(
+        'y',
+        Math.min(width - 18, Math.max(18, centerX + 8)),
+        16,
+      );
 
       ctx.restore();
 
